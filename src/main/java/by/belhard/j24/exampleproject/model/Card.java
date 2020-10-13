@@ -7,26 +7,24 @@ import org.apache.commons.codec.digest.DigestUtils;
 @Setter
 @ToString(exclude = "password")
 @EqualsAndHashCode(of = "id")
-public class Account {
+public class Card {
 
     private int id;
     private String name;
-    private long cash;
+    private int cash;
     @Setter(AccessLevel.NONE)
     private String password;
 
-    public Account(int id, String name, long cash, String password) {
+    public Card(int id, String name, int cash, String password) {
         this.id = id;
         this.name = name;
         this.cash = cash;
-        setPassword(password);
+        this.password = password;
+//        setPassword(password);
     }
 
     public void setPassword(String password) {
         this.password = DigestUtils.sha256Hex(password);
     }
 
-    public boolean checkPassword(String rawPassword) {
-        return DigestUtils.sha256Hex(rawPassword).equals(password);
-    }
 }
