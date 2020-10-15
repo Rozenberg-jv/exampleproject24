@@ -2,7 +2,9 @@ package by.belhard.j24.exampleproject.service;
 
 import by.belhard.j24.exampleproject.dto.CardDto;
 import by.belhard.j24.exampleproject.repository.CardRepository;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -11,26 +13,39 @@ import java.sql.Statement;
 
 public class CardServiceTest {
 
-	private CardService service;
+    private CardService service = new CardService();
 
-	@Before
-	public void setUp() throws SQLException {
+    @BeforeClass
+    public static void beforeClass() {
 
-		service = new CardService();
+    }
 
-		CardRepository cardRepository = new CardRepository();
+    @Before
+    public void setUp() throws SQLException {
 
-		Connection connection = cardRepository.getConnection();
-		Statement statement = connection.createStatement();
-		statement.executeQuery("insert into cards value (9999, 'VasilyTest', )");
-	}
+        CardRepository cardRepository = new CardRepository();
 
-	@Test
-	public void getById() throws SQLException {
+        Connection connection = cardRepository.getConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("insert into cards value (9999, 'VasilyTest', 10000, '123');");
+    }
 
-		CardDto cardDto = service.getById("1");
+    @After
+    public void after() throws SQLException {
 
-		assert cardDto.getId() == 9999;
-	}
+        CardRepository cardRepository = new CardRepository();
+
+        Connection connection = cardRepository.getConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("delete from cards where id = 9999;");
+    }
+
+    @Test
+    public void getById() throws SQLException {
+
+        CardDto cardDto = service.getById("9999");
+
+        assert cardDto.getName().equals("VasilyTest");
+    }
 
 }
